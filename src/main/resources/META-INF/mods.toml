@@ -16,14 +16,6 @@ Embeddium is a performance mod for Minecraft based on the last open-source versi
 credits="embeddedt, NanoLive, CaffeineMC"
 authors="embeddedt"
 
-[[dependencies.embeddium]] #optional
-modId = "neoforge" #mandatory
-type = "required" #mandatory
-mandatory = true
-versionRange = "[20.6.57-beta,)" #mandatory
-ordering = "NONE"
-side = "CLIENT"
-
 # Enforce new enough Oculus
 [[dependencies.embeddium]]
 modId = "oculus"

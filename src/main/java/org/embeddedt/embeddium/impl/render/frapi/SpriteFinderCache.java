@@ -7,10 +7,10 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.inventory.InventoryMenu;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import org.embeddedt.embeddium.impl.Embeddium;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,7 +19,7 @@ import java.lang.invoke.*;
 /**
  * Provides a mechanism for retrieving sprites by location on the atlas.
  */
-@EventBusSubscriber(modid = Embeddium.MODID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(modid = Embeddium.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class SpriteFinderCache {
     private static final Finder NULL_FINDER = (u, v) -> null;
     private static final MethodHandle SPRITE_FINDER_HANDLE;

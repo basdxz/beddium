@@ -21,7 +21,7 @@ import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.BlockDestructionProgress;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.client.ClientHooks;
+import net.minecraftforge.client.ForgeHooksClient;
 import org.embeddedt.embeddium.impl.sodium.FlawlessFrames;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
@@ -109,10 +109,11 @@ public abstract class WorldRendererMixin implements WorldRendererExtended {
      * @reason Redirect to our renderer
      * @author embeddedt
      */
-    @Overwrite
-    public void iterateVisibleBlockEntities(Consumer<BlockEntity> blockEntityConsumer) {
-        this.renderer.forEachVisibleBlockEntity(blockEntityConsumer);
-    }
+    //TODO: [VEN] Validate importance
+//    @Overwrite
+//    public void iterateVisibleBlockEntities(Consumer<BlockEntity> blockEntityConsumer) {
+//        this.renderer.forEachVisibleBlockEntity(blockEntityConsumer);
+//    }
 
     /**
      * @reason Redirect the check to our renderer
@@ -144,7 +145,7 @@ public abstract class WorldRendererMixin implements WorldRendererExtended {
 
         // TODO: Avoid setting up and clearing the state a second time
         renderLayer.setupRenderState();
-        ClientHooks.dispatchRenderStage(renderLayer, ((LevelRenderer)(Object)this), pose, matrix, this.ticks, this.minecraft.gameRenderer.getMainCamera(), this.getFrustum());
+        ForgeHooksClient.dispatchRenderStage(renderLayer, ((LevelRenderer)(Object)this), pose, matrix, this.ticks, this.minecraft.gameRenderer.getMainCamera(), this.getFrustum());
         renderLayer.clearRenderState();
     }
 

@@ -9,11 +9,11 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockAndTintGetter;
-import net.neoforged.neoforge.client.model.IQuadTransformer;
-import net.neoforged.neoforge.client.model.lighting.FlatQuadLighter;
-import net.neoforged.neoforge.client.model.lighting.QuadLighter;
-import net.neoforged.neoforge.client.model.lighting.SmoothQuadLighter;
-import net.neoforged.neoforge.client.textures.UnitTextureAtlasSprite;
+import net.minecraftforge.client.model.IQuadTransformer;
+import net.minecraftforge.client.model.lighting.FlatQuadLighter;
+import net.minecraftforge.client.model.lighting.QuadLighter;
+import net.minecraftforge.client.model.lighting.SmoothQuadLighter;
+import net.minecraftforge.client.textures.UnitTextureAtlasSprite;
 
 /**
  * Implements an Embeddium-compatible frontend for the Forge light pipeline.
@@ -62,16 +62,17 @@ public class ForgeLightPipeline implements LightPipeline {
 
     @Override
     public void calculate(ModelQuadView quad, BlockPos pos, QuadLightData out, Direction cullFace, Direction lightFace, boolean shade) {
-        this.computeLightData(pos);
-        BakedQuad forgeQuad;
-        if(quad instanceof BakedQuad) {
-            forgeQuad = (BakedQuad)quad;
-        } else {
-            forgeQuad = generateForgeQuad(quad);
-        }
-        forgeLighter.computeLightingForQuad(forgeQuad);
-        System.arraycopy(forgeLighter.getComputedLightmap(), 0, out.lm, 0, 4);
-        System.arraycopy(forgeLighter.getComputedBrightness(), 0, out.br, 0, 4);
+        //TODO: [VEN] re-introduce quad lighting
+//        this.computeLightData(pos);
+//        BakedQuad forgeQuad;
+//        if(quad instanceof BakedQuad) {
+//            forgeQuad = (BakedQuad)quad;
+//        } else {
+//            forgeQuad = generateForgeQuad(quad);
+//        }
+//        forgeLighter.computeLightingForQuad(forgeQuad);
+//        System.arraycopy(forgeLighter.getComputedLightmap(), 0, out.lm, 0, 4);
+//        System.arraycopy(forgeLighter.getComputedBrightness(), 0, out.br, 0, 4);
     }
 
     @Override

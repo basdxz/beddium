@@ -9,8 +9,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.random.WeightedEntry;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.client.ChunkRenderTypeSet;
-import net.neoforged.neoforge.client.model.data.ModelData;
+import net.minecraftforge.client.ChunkRenderTypeSet;
+import net.minecraftforge.client.model.data.ModelData;
 import org.embeddedt.embeddium.impl.model.UnwrappableBakedModel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,7 +32,7 @@ public class WeightedBakedModelMixin implements UnwrappableBakedModel {
      * @author JellySquid
      * @reason Avoid excessive object allocations
      */
-    @Overwrite
+    @Overwrite(remap = false) //TODO: [VEN] Ensure if this needs a remap
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction face, RandomSource random, ModelData modelData, RenderType renderLayer) {
         WeightedEntry.Wrapper<BakedModel> quad = getAt(this.list, Math.abs((int) random.nextLong()) % this.totalWeight);
 
@@ -48,7 +48,7 @@ public class WeightedBakedModelMixin implements UnwrappableBakedModel {
      * @author embeddedt
      * @reason Avoid excessive object allocations
      */
-    @Overwrite
+    @Overwrite(remap = false) //TODO: [VEN] Ensure if this needs a remap
     public ChunkRenderTypeSet getRenderTypes(@NotNull BlockState state, @NotNull RandomSource rand, @NotNull ModelData data) {
         WeightedEntry.Wrapper<BakedModel> quad = getAt(this.list, Math.abs((int) rand.nextLong()) % this.totalWeight);
 

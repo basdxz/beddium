@@ -3,11 +3,11 @@ package org.embeddedt.embeddium.impl.bootstrap;
 import cpw.mods.modlauncher.Launcher;
 import cpw.mods.modlauncher.api.IModuleLayerManager;
 import org.embeddedt.embeddium.impl.Embeddium;
-import net.neoforged.fml.loading.FMLLoader;
-import net.neoforged.fml.loading.ImmediateWindowHandler;
-import net.neoforged.fml.loading.LoadingModList;
-import net.neoforged.fml.loading.progress.StartupNotificationManager;
-import net.neoforged.neoforgespi.earlywindow.ImmediateWindowProvider;
+import net.minecraftforge.fml.loading.FMLLoader;
+import net.minecraftforge.fml.loading.ImmediateWindowHandler;
+import net.minecraftforge.fml.loading.ImmediateWindowProvider;
+import net.minecraftforge.fml.loading.LoadingModList;
+import net.minecraftforge.fml.loading.progress.StartupNotificationManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,7 +55,7 @@ public class EmbeddiumEarlyWindowHacks {
         // Initialize the new provider
         FMLLoader.progressWindowTick = newProvider.initialize(new String[] {
                 "--fml.mcVersion", FMLLoader.versionInfo().mcVersion(),
-                "--fml.neoForgeVersion", FMLLoader.versionInfo().neoForgeVersion(),
+                "--fml.forgeVersion", FMLLoader.versionInfo().forgeVersion(),
                 "--width", String.valueOf(width.getAsInt()),
                 "--height", String.valueOf(height.getAsInt())
         });

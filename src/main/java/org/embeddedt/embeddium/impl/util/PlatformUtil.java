@@ -1,11 +1,12 @@
 package org.embeddedt.embeddium.impl.util;
 
-import net.neoforged.fml.ModList;
-import net.neoforged.fml.loading.FMLLoader;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.loading.FMLLoader;
 
 public class PlatformUtil {
     public static boolean isLoadValid() {
-        return !FMLLoader.getLoadingModList().hasErrors();
+        //TODO: [VEN] Forge needs a `.hasErrors()` fr
+        return FMLLoader.getLoadingModList().getErrors().isEmpty();
     }
 
     public static boolean modPresent(String modid) {

@@ -1,6 +1,6 @@
 package org.embeddedt.embeddium.api.eventbus;
 
-import net.neoforged.neoforge.common.NeoForge;
+import net.minecraftforge.common.MinecraftForge;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -42,8 +42,8 @@ public class EventHandlerRegistrar<T extends EmbeddiumEvent> {
     }
 
     private static <T extends EmbeddiumEvent> boolean postPlatformSpecificEvent(T event) {
-        NeoForge.EVENT_BUS.post(event);
-        return event.isCanceled();
+        //TODO: [VEN] Is this correct API-Wise?
+        return MinecraftForge.EVENT_BUS.post(event);
     }
 
     @FunctionalInterface

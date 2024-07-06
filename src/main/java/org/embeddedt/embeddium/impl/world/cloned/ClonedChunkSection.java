@@ -28,9 +28,8 @@ import net.minecraft.world.level.chunk.PalettedContainer;
 import net.minecraft.world.level.chunk.PalettedContainerRO;
 import net.minecraft.world.level.levelgen.DebugLevelSource;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
-import net.neoforged.neoforge.client.model.data.ModelData;
-import net.neoforged.neoforge.client.model.data.ModelDataManager;
-import net.neoforged.neoforge.common.world.AuxiliaryLightManager;
+import net.minecraftforge.client.model.data.ModelData;
+import net.minecraftforge.client.model.data.ModelDataManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,7 +45,8 @@ public class ClonedChunkSection {
 
     private final @Nullable Int2ReferenceMap<BlockEntity> blockEntityMap;
     private final @Nullable Int2ReferenceMap<Object> blockEntityRenderDataMap;
-    private final @Nullable Long2ObjectFunction<ModelData> modelDataMap;
+    //TODO: [VEN] Might break god knows what
+//    private final @Nullable Long2ObjectFunction<ModelData> modelDataMap;
 
     private final @Nullable DataLayer[] lightDataArrays;
 
@@ -54,7 +54,8 @@ public class ClonedChunkSection {
 
     private final @Nullable PalettedContainerRO<Holder<Biome>> biomeData;
 
-    private final @Nullable AuxiliaryLightManager auxLightManager;
+    //TODO: [VEN] Might break lighting
+//    private final @Nullable AuxiliaryLightManager auxLightManager;
 
     private long lastUsedTimestamp = Long.MAX_VALUE;
 
@@ -76,7 +77,8 @@ public class ClonedChunkSection {
 
         Int2ReferenceMap<BlockEntity> blockEntityMap = null;
         Int2ReferenceMap<Object> blockEntityRenderDataMap = null;
-        Long2ObjectFunction<ModelData> modelDataMap = null;
+        //TODO: [VEN] Might break god knows what
+//        Long2ObjectFunction<ModelData> modelDataMap = null;
 
         if (section != null) {
             if (!section.hasOnlyAir()) {
@@ -86,7 +88,8 @@ public class ClonedChunkSection {
                     blockData = constructDebugWorldContainer(pos);
                 }
                 blockEntityMap = copyBlockEntities(chunk, pos);
-                modelDataMap = copyModelData(world, pos);
+                //TODO: [VEN] Might break god knows what
+//                modelDataMap = copyModelData(world, pos);
 
                 if (blockEntityMap != null) {
                     blockEntityRenderDataMap = copyBlockEntityRenderData(blockEntityMap);
@@ -100,12 +103,14 @@ public class ClonedChunkSection {
         this.biomeData = biomeData;
 
         this.blockEntityMap = blockEntityMap;
-        this.modelDataMap = modelDataMap;
+        //TODO: [VEN] Might break god knows what
+//        this.modelDataMap = modelDataMap;
         this.blockEntityRenderDataMap = blockEntityRenderDataMap;
 
         this.lightDataArrays = copyLightData(world, pos);
 
-        this.auxLightManager = chunk.getAuxLightManager(chunk.getPos());
+        //TODO: [VEN] Might break lighting
+//        this.auxLightManager = chunk.getAuxLightManager(chunk.getPos());
     }
 
     /**
@@ -172,12 +177,13 @@ public class ClonedChunkSection {
         return array;
     }
 
-    @Nullable
-    private static Long2ObjectFunction<ModelData> copyModelData(Level level, SectionPos chunkCoord) {
-        var forgeMap = level.getModelDataManager().snapshotSectionRegion(chunkCoord.x(), chunkCoord.y(), chunkCoord.z(), chunkCoord.x(), chunkCoord.y(), chunkCoord.z());
-
-        return forgeMap != ModelDataManager.EMPTY_SNAPSHOT ? forgeMap : null;
-    }
+    //TODO: [VEN] Might break god knows what
+//    @Nullable
+//    private static Long2ObjectFunction<ModelData> copyModelData(Level level, SectionPos chunkCoord) {
+//        var forgeMap = level.getModelDataManager().snapshotSectionRegion(chunkCoord.x(), chunkCoord.y(), chunkCoord.z(), chunkCoord.x(), chunkCoord.y(), chunkCoord.z());
+//
+//        return forgeMap != ModelDataManager.EMPTY_SNAPSHOT ? forgeMap : null;
+//    }
 
     private static Iterable<Map.Entry<BlockPos, BlockEntity>> fastIterable(Map<BlockPos, BlockEntity> blockEntityMap) {
         if (blockEntityMap instanceof Object2ObjectMap<BlockPos, BlockEntity> fastutilMap) {
@@ -268,13 +274,15 @@ public class ClonedChunkSection {
         return this.blockEntityRenderDataMap;
     }
 
-    public @Nullable Long2ObjectFunction<ModelData> getModelDataMap() {
-        return this.modelDataMap;
-    }
+    //TODO: [VEN] Might break god knows what
+//    public @Nullable Long2ObjectFunction<ModelData> getModelDataMap() {
+//        return this.modelDataMap;
+//    }
 
-    public AuxiliaryLightManager getAuxLightManager() {
-        return this.auxLightManager;
-    }
+    //TODO: [VEN] Might break lighting
+//    public AuxiliaryLightManager getAuxLightManager() {
+//        return this.auxLightManager;
+//    }
 
     public @Nullable DataLayer getLightArray(LightLayer lightType) {
         return this.lightDataArrays[lightType.ordinal()];

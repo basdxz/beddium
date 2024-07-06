@@ -1,8 +1,8 @@
 package org.embeddedt.embeddium.impl.taint.mixin;
 
-import net.neoforged.fml.loading.LoadingModList;
-import net.neoforged.fml.loading.moddiscovery.ModFileInfo;
-import net.neoforged.neoforgespi.language.IModInfo;
+import net.minecraftforge.fml.loading.LoadingModList;
+import net.minecraftforge.fml.loading.moddiscovery.ModFileInfo;
+import net.minecraftforge.forgespi.language.IModInfo;
 import org.apache.maven.artifact.versioning.Restriction;
 import org.objectweb.asm.tree.ClassNode;
 import org.slf4j.Logger;

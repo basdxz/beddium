@@ -1,8 +1,8 @@
 package org.embeddedt.embeddium.impl.mixin;
 
-import net.neoforged.fml.loading.FMLLoader;
-import net.neoforged.fml.loading.LoadingModList;
-import net.neoforged.fml.loading.moddiscovery.ModInfo;
+import net.minecraftforge.fml.loading.FMLLoader;
+import net.minecraftforge.fml.loading.LoadingModList;
+import net.minecraftforge.fml.loading.moddiscovery.ModInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -93,7 +93,8 @@ public class MixinConfig {
 
         Pattern replacePattern = Pattern.compile("[^\\w]");
 
-        if (!FMLLoader.getLoadingModList().hasErrors()) {
+        //TODO: [VEN] Forge needs a `.hasErrors()` fr
+        if (FMLLoader.getLoadingModList().getErrors().isEmpty()) {
             for (ModInfo modInfo : FMLLoader.getLoadingModList().getMods()) {
                 // Convert anything but alphabets and numbers to _
                 String sanitizedModId = replacePattern.matcher(modInfo.getModId()).replaceAll("_");

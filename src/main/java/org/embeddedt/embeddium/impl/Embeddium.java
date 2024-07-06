@@ -1,8 +1,7 @@
 package org.embeddedt.embeddium.impl;
 
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.ModList;
-import net.neoforged.fml.common.Mod;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.common.Mod;
 import org.embeddedt.embeddium.api.EmbeddiumConstants;
 import org.embeddedt.embeddium.impl.data.fingerprint.FingerprintMeasure;
 import org.embeddedt.embeddium.impl.data.fingerprint.HashedFingerprint;
@@ -11,7 +10,8 @@ import org.embeddedt.embeddium.impl.render.ShaderModBridge;
 import org.embeddedt.embeddium.impl.sodium.FlawlessFrames;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 import java.io.IOException;
 
@@ -25,7 +25,7 @@ public class Embeddium {
 
     private static String MOD_VERSION;
 
-    public Embeddium(IEventBus modEventBus) {
+    public Embeddium() {
         MOD_VERSION = ModList.get().getModContainerById(MODID).get().getModInfo().getVersion().toString();
 
         try {
@@ -34,7 +34,7 @@ public class Embeddium {
             LOGGER.error("Failed to update fingerprint", t);
         }
 
-        modEventBus.addListener(this::onClientSetup);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onClientSetup);
     }
 
     public void onClientSetup(final FMLClientSetupEvent event) {

@@ -41,7 +41,9 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.fml.loading.FMLLoader;
+
+import net.minecraftforge.common.extensions.IForgeBlockEntity;
+import net.minecraftforge.fml.loading.FMLLoader;
 import org.joml.Matrix4f;
 
 import java.util.*;
@@ -363,7 +365,9 @@ public class EmbeddiumWorldRenderer {
         if(renderer == null) {
             return false;
         }
-        AABB box = renderer.getRenderBoundingBox(entity);
+        // TODO: [VEN] This will greatly impact the economy
+//        AABB box = renderer.getRenderBoundingBox(entity);
+        AABB box = IForgeBlockEntity.INFINITE_EXTENT_AABB;
         return currentViewport.isBoxVisible(box);
     }
 

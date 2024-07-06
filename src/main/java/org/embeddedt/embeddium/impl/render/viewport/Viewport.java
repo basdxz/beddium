@@ -1,5 +1,6 @@
 package org.embeddedt.embeddium.impl.render.viewport;
 
+import net.minecraftforge.common.extensions.IForgeBlockEntity;
 import org.embeddedt.embeddium.impl.render.viewport.frustum.Frustum;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
@@ -27,7 +28,8 @@ public final class Viewport {
     }
 
     public boolean isBoxVisible(AABB box) {
-        if (box.isInfinite()) {
+        //TODO: [VEN] Forge needs an `.isInfinite()` fr
+        if (box.equals(IForgeBlockEntity.INFINITE_EXTENT_AABB)) {
             return true;
         }
 

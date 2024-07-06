@@ -39,7 +39,7 @@ public class SpriteContentsMixin {
     // support Forge, since this works well on Fabric too, it's fine to ensure that the diff between Fabric and Forge
     // can remain minimal. Being less dependent on specific details of Fabric is good, since it means we can be more
     // cross-platform.
-    @Redirect(method = "<init>", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/texture/SpriteContents;originalImage:Lcom/mojang/blaze3d/platform/NativeImage;", opcode = Opcodes.PUTFIELD))
+    @Redirect(method = "<init>(Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/client/resources/metadata/animation/FrameSize;Lcom/mojang/blaze3d/platform/NativeImage;Lnet/minecraft/server/packs/resources/ResourceMetadata;Lnet/minecraftforge/client/textures/ForgeTextureMetadata;)V", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/texture/SpriteContents;originalImage:Lcom/mojang/blaze3d/platform/NativeImage;", opcode = Opcodes.PUTFIELD))
     private void sodium$beforeGenerateMipLevels(SpriteContents instance, NativeImage nativeImage, ResourceLocation identifier) {
         // Embeddium: Only fill in transparent colors if mipmaps are on and the texture name does not contain "leaves".
         // We're injecting after the "name" field has been set, so this is safe even though we're in a constructor.

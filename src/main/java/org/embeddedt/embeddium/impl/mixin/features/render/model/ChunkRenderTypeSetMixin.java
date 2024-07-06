@@ -3,7 +3,7 @@ package org.embeddedt.embeddium.impl.mixin.features.render.model;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.Util;
 import net.minecraft.client.renderer.RenderType;
-import net.neoforged.neoforge.client.ChunkRenderTypeSet;
+import net.minecraftforge.client.ChunkRenderTypeSet;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;

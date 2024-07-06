@@ -37,7 +37,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import org.apache.commons.lang3.mutable.MutableFloat;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.embeddedt.embeddium.impl.render.chunk.compile.GlobalChunkBuildContext;
@@ -135,9 +135,12 @@ public class FluidRenderer {
         var context = Objects.requireNonNull(GlobalChunkBuildContext.get());
         context.setCaptureAdditionalSprites(true);
 
-        boolean skipDefaultRendering;
+        // TODO: [VEN] Water might not feel so good
+//        boolean skipDefaultRendering;
+        boolean skipDefaultRendering = false;
         try(var consumer = meshBuilder.asVertexConsumer(material)) {
-            skipDefaultRendering = IClientFluidTypeExtensions.of(fluidState).renderFluid(fluidState, world, blockPos, consumer, world.getBlockState(blockPos));
+            // TODO: [VEN] Water might not feel so good
+//            skipDefaultRendering = IClientFluidTypeExtensions.of(fluidState).renderFluid(fluidState, world, blockPos, consumer, world.getBlockState(blockPos));
         }
 
         for(TextureAtlasSprite sprite : context.getAdditionalCapturedSprites()) {

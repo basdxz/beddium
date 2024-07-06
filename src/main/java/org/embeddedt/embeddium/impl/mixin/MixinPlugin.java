@@ -1,10 +1,10 @@
 package org.embeddedt.embeddium.impl.mixin;
 
 import org.embeddedt.embeddium.impl.EmbeddiumPreLaunch;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.fml.loading.FMLLoader;
-import net.neoforged.fml.loading.moddiscovery.ModFile;
-import net.neoforged.fml.loading.moddiscovery.ModFileInfo;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.loading.FMLLoader;
+import net.minecraftforge.fml.loading.moddiscovery.ModFile;
+import net.minecraftforge.fml.loading.moddiscovery.ModFileInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.embeddedt.embeddium.impl.asm.AnnotationProcessingEngine;
@@ -118,7 +118,7 @@ public class MixinPlugin implements IMixinConfigPlugin {
 
     private static String mixinClassify(Path baseFolder, Path path) {
         try {
-            String className = baseFolder.relativize(path).toString().replace('/', '.');
+            String className = baseFolder.relativize(path).toString().replace('/', '.').replace('\\', '.');
             return className.substring(0, className.length() - 6);
         } catch(RuntimeException e) {
             throw new IllegalStateException("Error relativizing " + path + " to " + baseFolder, e);

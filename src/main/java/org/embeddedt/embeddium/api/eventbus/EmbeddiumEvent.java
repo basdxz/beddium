@@ -1,7 +1,6 @@
 package org.embeddedt.embeddium.api.eventbus;
 
-import net.neoforged.bus.api.Event;
-import net.neoforged.bus.api.ICancellableEvent;
+import net.minecraftforge.eventbus.api.Event;
 
 /**
  * The base class which all Embeddium-posted events are derived from.
@@ -10,21 +9,23 @@ import net.neoforged.bus.api.ICancellableEvent;
  * <p></p>
  * On Fabric, it extends nothing.
  */
-public abstract class EmbeddiumEvent extends Event implements ICancellableEvent {
+//TODO: [VEN] Is this correct API-Wise?
+public abstract class EmbeddiumEvent extends Event {
     /**
      * Subclasses must override and return true if they want the event to be canceled.
      */
+    @Override
     public boolean isCancelable() {
         return false;
     }
 
     @Override
     public boolean isCanceled() {
-        return ICancellableEvent.super.isCanceled();
+        return super.isCanceled();
     }
 
     @Override
     public void setCanceled(boolean cancel) {
-        ICancellableEvent.super.setCanceled(cancel);
+        super.setCanceled(cancel);
     }
 }

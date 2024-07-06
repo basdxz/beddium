@@ -31,7 +31,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.client.model.data.ModelData;
+import net.minecraftforge.client.model.data.ModelData;
 import org.embeddedt.embeddium.api.ChunkDataBuiltEvent;
 import org.embeddedt.embeddium.impl.chunk.MeshAppenderRenderer;
 import org.embeddedt.embeddium.impl.model.UnwrappableBakedModel;
@@ -105,8 +105,8 @@ public class ChunkBuilderMeshingTask extends ChunkBuilderTask<ChunkBuildOutput> 
                     for (int x = minX; x < maxX; x++) {
                         BlockState blockState = slice.getBlockState(x, y, z);
 
-                        // Embeddium: use isEmpty instead of isAir/BE check
-                        if (blockState.isEmpty()) {
+                        //TODO: [VEN] Forge needs an .isEmpty() fr!
+                        if (blockState.isAir() && !blockState.hasBlockEntity()) {
                             continue;
                         }
 
@@ -116,7 +116,9 @@ public class ChunkBuilderMeshingTask extends ChunkBuilderTask<ChunkBuildOutput> 
                         if (blockState.getRenderShape() == RenderShape.MODEL) {
                             BakedModel model = cache.getBlockModels()
                                 .getBlockModel(blockState);
-                            ModelData modelData = model.getModelData(context.localSlice(), blockPos, blockState, slice.getModelData(blockPos));
+                            //TODO: [VEN] Might break god knows what
+//                            ModelData modelData = model.getModelData(context.localSlice(), blockPos, blockState, slice.getModelData(blockPos));
+                            ModelData modelData = model.getModelData(context.localSlice(), blockPos, blockState, ModelData.EMPTY);
 
                             long seed = blockState.getSeed(blockPos);
                             random.setSeed(seed);

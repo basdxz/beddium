@@ -1,11 +1,10 @@
-import org.embeddedt.embeddium.gradle.VerifyAPICompat
-
-evaluationDependsOnChildren()
+import org.w3c.dom.Element
 
 plugins {
     id("idea")
-    id("java-library")
+    id("net.minecraftforge.gradle") version("[6.0.24,6.2)")
     id("maven-publish")
+    id("org.spongepowered.mixin") version("0.7.38")
 
     // This dependency is only used to determine the state of the Git working tree so that build artifacts can be
     // more easily identified. TODO: Lazily load GrGit via a service only when builds are performed.
@@ -13,7 +12,9 @@ plugins {
 
     id("me.modmuss50.mod-publish-plugin") version("0.3.4")
 
-    id("embeddium-platform-selector")
+    id("org.parchmentmc.librarian.forgegradle") version("1.2.0.7-dev-SNAPSHOT")
+
+    id("embeddium-fabric-remapper")
 }
 
 operator fun String.invoke(): String {
@@ -34,8 +35,27 @@ base {
     archivesName = "archives_base_name"()
 }
 
+// Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
+// java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+val extraSourceSets = arrayOf("legacy", "compat")
+
+sourceSets {
+    val main = getByName("main")
+
+    extraSourceSets.forEach {
+        val sourceset = create(it)
+        sourceset.apply {
+            java {
+                compileClasspath += main.compileClasspath
+                compileClasspath += main.output
+            }
+        }
+    }
+}
+
 repositories {
-    maven("https://libraries.minecraft.net")
+    maven("https://maven.minecraftforge.net/")
     maven("https://maven.fabricmc.net")
     maven("https://maven.tterrag.com/")
     maven("https://maven.blamejared.com")
@@ -52,6 +72,39 @@ repositories {
     maven("https://maven.covers1624.net/")
 }
 
+jarJar.enable()
+
+minecraft {
+    if(rootProject.properties.containsKey("parchment_version")) {
+        mappings("parchment", "parchment_version"())
+    } else {
+        mappings("official", "minecraft_version"())
+    }
+    copyIdeResources = true
+    accessTransformer(file("src/main/resources/META-INF/accesstransformer.cfg"))
+    runs {
+        configureEach {
+            workingDirectory(project.file("run"))
+
+            property("forge.logging.console.level", "info")
+
+            property("mixin.env.remapRefMap", "true")
+            property("mixin.env.refMapRemappingFile", "${projectDir}/build/createSrgToMcp/output.srg")
+
+            mods {
+                create("embeddium") {
+                    sources(sourceSets["main"])
+                    extraSourceSets.forEach {
+                        sources(sourceSets[it])
+                    }
+                }
+            }
+        }
+
+        create("client") {}
+    }
+}
+
 configurations {
     val runtimeOnlyNonPublishable = create("runtimeOnlyNonPublishable") {
         description = "Runtime only dependencies that are not published alongside the jar"
@@ -61,28 +114,71 @@ configurations {
     runtimeClasspath.get().extendsFrom(runtimeOnlyNonPublishable)
 }
 
-fun DependencyHandlerScope.compatCompileOnly(dependency: String) {
+val extraModsDir = "extra-mods-${"minecraft_version"()}"
+
+repositories {
+    flatDir {
+        name = "extra-mods"
+        dirs(file(extraModsDir))
+    }
+}
+
+mixin {
+    // MixinGradle Settings
+    add(sourceSets["main"], "embeddium-refmap.json")
+    config("embeddium.mixins.json")
+}
+
+fun DependencyHandlerScope.compatCompileOnly(dependency: Dependency) {
     "compatCompileOnly"(dependency)
 }
 
 dependencies {
-    // FIXME remove when NG not loading this from NF itself is fixed
-    implementation("io.github.llamalad7:mixinextras-neoforge:0.3.5")
+    minecraft("net.minecraftforge:forge:${"minecraft_version"()}-${"forge_version"()}")
 
     // Mods
-    compatCompileOnly("curse.maven:codechickenlib-242818:${"codechicken_fileid"()}")
+    compatCompileOnly(fg.deobf("curse.maven:codechickenlib-242818:${"codechicken_fileid"()}"))
+    compatCompileOnly(fg.deobf("curse.maven:immersiveengineering-231951:${"ie_fileid"()}"))
+
+    // Fabric API
+    compileOnly("net.fabricmc.fabric-api:fabric-api:${"fabric_version"()}")
+    compileOnly("net.fabricmc:fabric-loader:${"fabric_loader_version"()}")
+
+    annotationProcessor("net.fabricmc:sponge-mixin:0.12.5+mixin.0.8.5")
+
+    compileOnly("io.github.llamalad7:mixinextras-common:0.3.5")
+    annotationProcessor("io.github.llamalad7:mixinextras-common:0.3.5")
+    implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.3.5")) {
+        jarJar.ranged(this, "[0.3.5,)")
+    }
+
+    // Hack fix for now, force jopt-simple to be exactly 5.0.4 because Mojang ships that version, but some transitive dependencies request 6.0+
+    implementation("net.sf.jopt-simple:jopt-simple:5.0.4") { version { strictly("5.0.4") } }
+
+    // runtime remapping at home
+    fileTree(extraModsDir) {
+        include("*.jar") 
+    }.files.forEach { extraModJar ->
+        val basename = extraModJar.name.substring(0, extraModJar.name.length - ".jar".length)
+        val versionSep = basename.lastIndexOf('-')
+        assert(versionSep != -1)
+        val artifactId = basename.substring(0, versionSep)
+        val version = basename.substring(versionSep + 1)
+        runtimeOnly(fg.deobf("extra-mods:$artifactId:$version"))
+    }
 }
 
 tasks.processResources {
     inputs.property("version", "version"())
 
-    filesMatching(listOf("META-INF/neoforge.mods.toml", "fabric.mod.json")) {
+    filesMatching("META-INF/mods.toml") {
         expand("version" to "version"())
     }
 }
 
 tasks.withType<JavaCompile> {
     options.release = 21
+    val compilerArgs = options.compilerArgs
 }
 
 
@@ -90,12 +186,26 @@ java {
     withSourcesJar()
 }
 
-// Make a JAR that has impl stripped
-tasks.create<Jar>("apiJar") {
-    archiveClassifier = "api"
-    from(sourceSets["main"].output) {
-        exclude("org/embeddedt/embeddium/impl/**")
-        exclude("assets/**")
+tasks.named<Jar>("jar").configure {
+    archiveClassifier = "slim"
+}
+
+tasks.jarJar {
+    from("COPYING", "COPYING.LESSER", "README.md")
+
+    extraSourceSets.forEach {
+        from(sourceSets[it].output.classesDirs)
+        from(sourceSets[it].output.resourcesDir)
+    }
+
+    finalizedBy("reobfJarJar")
+
+    archiveClassifier = ""
+}
+
+tasks.named<Jar>("sourcesJar").configure {
+    extraSourceSets.forEach {
+        from(sourceSets[it].allJava)
     }
 }
 
@@ -105,8 +215,26 @@ publishing {
     }
     publications {
         this.create<MavenPublication>("mavenJava") {
-            from(components["java"])
-            artifact(tasks.named("apiJar"))
+            artifact(tasks.named("jarJar"))
+            artifact(tasks.named("sourcesJar"))
+            fg.component(this)
+            pom {
+                withXml {
+                    // Workaround for NG only checking for net.minecraftforge group
+                    val root = this.asElement()
+
+                    val depsParent = (root.getElementsByTagName("dependencies").item(0) as Element)
+                    val allDeps = depsParent.getElementsByTagName("dependency")
+
+                    (0..allDeps.length).map { allDeps.item(it) }.filterIsInstance<Element>().filter {
+                        val artifactId = it.getElementsByTagName("artifactId").item(0).textContent
+                        val groupId = it.getElementsByTagName("groupId").item(0).textContent
+                        (artifactId == "forge") && (groupId == "net.neoforged")
+                    }.forEach {
+                        depsParent.removeChild(it)
+                    }
+                }
+            }
         }
     }
     repositories {
@@ -114,22 +242,11 @@ publishing {
     }
 }
 
-tasks.register<VerifyAPICompat>("verifyAPICompat") {
-    group = "verification"
-    binary = tasks.getByName<Jar>("jar").archiveFile
-}
-
 publishMods {
-    file = tasks.jar.get().archiveFile
+    file = tasks.jarJar.get().archiveFile
     changelog = "https://github.com/embeddedt/embeddium/wiki/Changelog"
-    val modVer = "mod_version"()
-    if(modVer.contains("beta")) {
-        type = BETA
-    } else if(modVer.contains("alpha")) {
-        type = ALPHA
-    } else {
-        type = STABLE
-    }
+    type = STABLE
+    modLoaders.add("forge")
     modLoaders.add("neoforge")
 
     curseforge {
@@ -166,19 +283,13 @@ fun getModVersion(): String {
     var baseVersion: String = project.properties["mod_version"].toString()
     val mcMetadata: String = "+mc" + project.properties["minecraft_version"]
 
-    if (project.hasProperty("build.release") || baseVersion.contains('-')) {
+    if (project.hasProperty("build.release")) {
         return baseVersion + mcMetadata // no tag whatsoever
     }
 
     // Increment patch version
     baseVersion = baseVersion.split(".").mapIndexed {
-        index, s -> if(index == 2) {
-            try {
-                (s.toInt() + 1)
-            } catch(e: NumberFormatException) {
-                s
-            }
-        } else s
+        index, s -> if(index == 2) (s.toInt() + 1) else s
     }.joinToString(separator = ".")
 
     val head = grgit.head()
@@ -190,4 +301,16 @@ fun getModVersion(): String {
     }
 
     return baseVersion + "-git-${id}" + mcMetadata
+}
+
+// This snippet comes from the ForgeMDK
+//
+// Merge the resources and classes into the same directory.
+// This is done because java expects modules to be in a single directory.
+// And if we have it in multiple we have to do performance intensive hacks like having the UnionFileSystem
+// This will eventually be migrated to ForgeGradle so modders don't need to manually do it. But that is later.
+sourceSets.forEach {
+    val dir = layout.buildDirectory.dir("sourcesSets/$it.name").get().asFile
+    it.output.resourcesDir = dir
+    it.java.destinationDirectory = dir
 }

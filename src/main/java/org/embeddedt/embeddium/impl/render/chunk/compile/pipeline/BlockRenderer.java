@@ -229,11 +229,13 @@ public class BlockRenderer {
     private LightMode getLightingMode(BlockRenderContext ctx) {
         var model = ctx.model();
         var state = ctx.state();
-        boolean canBeSmooth = this.useAmbientOcclusion && switch(model.useAmbientOcclusion(state, ctx.modelData(), ctx.renderLayer())) {
-            case TRUE -> true;
-            case DEFAULT -> state.getLightEmission(ctx.localSlice(), ctx.pos()) == 0;
-            case FALSE -> false;
-        };
+        // TODO: [VEN] Might break smooth lighting
+        boolean canBeSmooth = this.useAmbientOcclusion && model.useAmbientOcclusion(state, ctx.renderLayer());
+//        boolean canBeSmooth = this.useAmbientOcclusion && switch(model.useAmbientOcclusion(state, ctx.modelData(), ctx.renderLayer())) {
+//            case TRUE -> true;
+//            case DEFAULT -> state.getLightEmission(ctx.localSlice(), ctx.pos()) == 0;
+//            case FALSE -> false;
+//        };
         return canBeSmooth ? LightMode.SMOOTH : LightMode.FLAT;
     }
 }

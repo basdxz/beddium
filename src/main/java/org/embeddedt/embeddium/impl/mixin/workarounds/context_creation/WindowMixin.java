@@ -6,8 +6,8 @@ import org.embeddedt.embeddium.impl.compatibility.checks.LateDriverScanner;
 import org.embeddedt.embeddium.impl.compatibility.workarounds.Workarounds;
 import org.embeddedt.embeddium.impl.compatibility.workarounds.nvidia.NvidiaWorkarounds;
 import net.minecraft.Util;
-import net.neoforged.fml.loading.FMLConfig;
-import net.neoforged.fml.loading.ImmediateWindowHandler;
+import net.minecraftforge.fml.loading.FMLConfig;
+import net.minecraftforge.fml.loading.ImmediateWindowHandler;
 import org.embeddedt.embeddium.impl.bootstrap.EmbeddiumEarlyWindowHacks;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
@@ -41,7 +41,7 @@ public class WindowMixin {
     @Unique
     private long wglPrevContext = MemoryUtil.NULL;
 
-    @Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/neoforged/fml/loading/ImmediateWindowHandler;setupMinecraftWindow(Ljava/util/function/IntSupplier;Ljava/util/function/IntSupplier;Ljava/util/function/Supplier;Ljava/util/function/LongSupplier;)J"), require = 0)
+    @Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraftforge/fml/loading/ImmediateWindowHandler;setupMinecraftWindow(Ljava/util/function/IntSupplier;Ljava/util/function/IntSupplier;Ljava/util/function/Supplier;Ljava/util/function/LongSupplier;)J"), require = 0)
     private long wrapGlfwCreateWindow(IntSupplier width, IntSupplier height, Supplier<String> title, LongSupplier monitor) {
         final boolean applyNvidiaWorkarounds = Workarounds.isWorkaroundEnabled(Workarounds.Reference.NVIDIA_THREADED_OPTIMIZATIONS);
 

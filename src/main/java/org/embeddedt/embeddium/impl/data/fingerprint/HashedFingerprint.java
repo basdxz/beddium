@@ -3,7 +3,7 @@ package org.embeddedt.embeddium.impl.data.fingerprint;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import org.embeddedt.embeddium.impl.util.FileUtil;
-import net.neoforged.fml.loading.FMLPaths;
+import net.minecraftforge.fml.loading.FMLPaths;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

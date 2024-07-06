@@ -1,7 +1,7 @@
 package org.embeddedt.embeddium.impl.data.fingerprint;
 
 import net.minecraft.client.Minecraft;
-import net.neoforged.fml.loading.FMLPaths;
+import net.minecraftforge.fml.loading.FMLPaths;
 import org.apache.commons.codec.binary.Hex;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
