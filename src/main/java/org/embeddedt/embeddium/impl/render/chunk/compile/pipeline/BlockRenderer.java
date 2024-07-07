@@ -2,6 +2,7 @@ package org.embeddedt.embeddium.impl.render.chunk.compile.pipeline;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.fabricmc.fabric.api.util.TriState;
 import org.embeddedt.embeddium.api.render.chunk.BlockRenderContext;
 import org.embeddedt.embeddium.impl.model.color.ColorProvider;
 import org.embeddedt.embeddium.impl.model.color.ColorProviderRegistry;
@@ -35,6 +36,9 @@ import org.embeddedt.embeddium.impl.render.frapi.IndigoBlockRenderContext;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 
 public class BlockRenderer {
     private static final PoseStack EMPTY_STACK = new PoseStack();
@@ -229,13 +233,9 @@ public class BlockRenderer {
     private LightMode getLightingMode(BlockRenderContext ctx) {
         var model = ctx.model();
         var state = ctx.state();
-        // TODO: [VEN] Might break smooth lighting
-        boolean canBeSmooth = this.useAmbientOcclusion && model.useAmbientOcclusion(state, ctx.renderLayer());
-//        boolean canBeSmooth = this.useAmbientOcclusion && switch(model.useAmbientOcclusion(state, ctx.modelData(), ctx.renderLayer())) {
-//            case TRUE -> true;
-//            case DEFAULT -> state.getLightEmission(ctx.localSlice(), ctx.pos()) == 0;
-//            case FALSE -> false;
-//        };
-        return canBeSmooth ? LightMode.SMOOTH : LightMode.FLAT;
+
+        if (state.getLightEmission(ctx.localSlice(), ctx.pos()) == 0 && this.useAmbientOcclusion && model.useAmbientOcclusion(state, ctx.renderLayer()))
+            return LightMode.SMOOTH;
+        return LightMode.FLAT;
     }
 }
