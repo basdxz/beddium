@@ -361,14 +361,7 @@ public class EmbeddiumWorldRenderer {
     }
 
     private <T extends BlockEntity> boolean isBlockEntityRendererVisible(BlockEntityRenderDispatcher dispatcher, T entity) {
-        BlockEntityRenderer<T> renderer = dispatcher.getRenderer(entity);
-        if(renderer == null) {
-            return false;
-        }
-        // TODO: [VEN] This will greatly impact the economy
-//        AABB box = renderer.getRenderBoundingBox(entity);
-        AABB box = IForgeBlockEntity.INFINITE_EXTENT_AABB;
-        return currentViewport.isBoxVisible(box);
+        return currentViewport.isBoxVisible(entity.getRenderBoundingBox());
     }
 
     private void renderBlockEntities(PoseStack matrices,
