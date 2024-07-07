@@ -177,28 +177,4 @@ public class MultipartBakedModelMixin {
 
         return ChunkRenderTypeSet.union(sets);
     }
-
-    /**
-     * @author embeddedt
-     * @reason use our selector system, avoid creating multipart model data if no submodels use it
-     */
-    //TODO: [VEN] Re-add if Forge adds this
-//    @Overwrite(remap = false)
-//    public ModelData getModelData(BlockAndTintGetter world, BlockPos pos, BlockState state, ModelData tileModelData) {
-//        BakedModel[] models = getModelComponents(state);
-//
-//        Map<BakedModel, ModelData> dataMap = null;
-//
-//        for(BakedModel model : models) {
-//            ModelData data = model.getModelData(world, pos, state, tileModelData);
-//            if(data != tileModelData) {
-//                if(dataMap == null) {
-//                    dataMap = new Reference2ReferenceOpenHashMap<>();
-//                }
-//                dataMap.put(model, data);
-//            }
-//        }
-//
-//        return dataMap == null ? tileModelData : tileModelData.derive().with(MultipartModelDataAccessor.getProperty(), dataMap).build();
-//    }
 }

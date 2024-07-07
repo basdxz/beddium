@@ -5,7 +5,6 @@ import net.minecraftforge.fml.loading.FMLLoader;
 
 public class PlatformUtil {
     public static boolean isLoadValid() {
-        //TODO: [VEN] Forge needs a `.hasErrors()` fr
         return FMLLoader.getLoadingModList().getErrors().isEmpty();
     }
 

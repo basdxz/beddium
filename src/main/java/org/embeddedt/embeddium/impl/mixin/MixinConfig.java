@@ -93,7 +93,6 @@ public class MixinConfig {
 
         Pattern replacePattern = Pattern.compile("[^\\w]");
 
-        //TODO: [VEN] Forge needs a `.hasErrors()` fr
         if (FMLLoader.getLoadingModList().getErrors().isEmpty()) {
             for (ModInfo modInfo : FMLLoader.getLoadingModList().getMods()) {
                 // Convert anything but alphabets and numbers to _

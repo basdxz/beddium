@@ -28,7 +28,6 @@ public final class Viewport {
     }
 
     public boolean isBoxVisible(AABB box) {
-        //TODO: [VEN] Forge needs an `.isInfinite()` fr
         if (box.equals(IForgeBlockEntity.INFINITE_EXTENT_AABB)) {
             return true;
         }

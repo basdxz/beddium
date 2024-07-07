@@ -31,11 +31,7 @@ public class BlockModelRendererMixin {
     @Unique
     private final RandomSource random = new SingleThreadedRandomSource(42L);
 
-    /**
-     * @reason Use optimized vertex writer intrinsics, avoid allocations
-     * @author JellySquid
-     */
-    //TODO: [VEN] Ensure if this needs a remap
+
     @Inject(method = "renderModel(Lcom/mojang/blaze3d/vertex/PoseStack$Pose;Lcom/mojang/blaze3d/vertex/VertexConsumer;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/client/resources/model/BakedModel;FFFIILnet/minecraftforge/client/model/data/ModelData;Lnet/minecraft/client/renderer/RenderType;)V", remap = false, at = @At("HEAD"), cancellable = true, require = 0)
     private void renderFast(PoseStack.Pose entry, VertexConsumer vertexConsumer, BlockState blockState, BakedModel bakedModel, float red, float green, float blue, int light, int overlay, ModelData modelData, RenderType renderType, CallbackInfo ci) {
         var writer = VertexConsumerUtils.convertOrLog(vertexConsumer);

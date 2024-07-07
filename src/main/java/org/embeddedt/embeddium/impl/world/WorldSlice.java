@@ -100,23 +100,11 @@ public class WorldSlice implements EmbeddiumBlockAndTintGetter, FabricBlockView,
     // (Local Section -> Block Entity Render Data) table.
     private final @Nullable Int2ReferenceMap<Object>[] blockEntityRenderDataArrays;
 
-    // (Local Section -> Model Data) table.
-    //TODO: [VEN] Might break god knows what
-//    private final @Nullable Long2ObjectFunction<ModelData>[] modelDataArrays;
-
-    // (Local Section -> Aux Light) table.
-    //TODO: [VEN] Might break lighting
-//    private final @Nullable AuxiliaryLightManager[] auxLightArrays;
-
     // The starting point from which this slice captures blocks
     private int originX, originY, originZ;
     
     // The volume that this WorldSlice contains
     private BoundingBox volume;
-
-    // Flag to make model data lookups fast if none of the sections in the slice have it
-    //TODO: [VEN] Might break god knows what
-//    private boolean hasModelData;
 
     public static ChunkRenderContext prepare(Level world, SectionPos origin, ClonedChunkSectionCache sectionCache) {
         LevelChunk chunk = world.getChunk(origin.getX(), origin.getZ());
@@ -168,13 +156,9 @@ public class WorldSlice implements EmbeddiumBlockAndTintGetter, FabricBlockView,
 
         this.blockArrays = new BlockState[SECTION_ARRAY_SIZE][SECTION_BLOCK_COUNT];
         this.lightArrays = new DataLayer[SECTION_ARRAY_SIZE][LIGHT_TYPES.length];
-        //TODO: [VEN] Might break lighting
-//        this.auxLightArrays = new AuxiliaryLightManager[SECTION_ARRAY_SIZE];
 
         this.blockEntityArrays = new Int2ReferenceMap[SECTION_ARRAY_SIZE];
         this.blockEntityRenderDataArrays = new Int2ReferenceMap[SECTION_ARRAY_SIZE];
-        //TODO: [VEN] Might break god knows what
-//        this.modelDataArrays = new Long2ObjectFunction[SECTION_ARRAY_SIZE];
 
         this.biomeSlice = new BiomeSlice();
         this.biomeColors = new BiomeColorCache(this.biomeSlice, Minecraft.getInstance().options.biomeBlendRadius().get());
@@ -189,9 +173,6 @@ public class WorldSlice implements EmbeddiumBlockAndTintGetter, FabricBlockView,
         this.originY = (context.getOrigin().getY() - NEIGHBOR_CHUNK_RADIUS) << 4;
         this.originZ = (context.getOrigin().getZ() - NEIGHBOR_CHUNK_RADIUS) << 4;
         this.volume = context.getVolume();
-
-        //TODO: [VEN] Might break god knows what
-//        this.hasModelData = false;
 
         for (int x = 0; x < SECTION_ARRAY_LENGTH; x++) {
             for (int y = 0; y < SECTION_ARRAY_LENGTH; y++) {
@@ -221,15 +202,6 @@ public class WorldSlice implements EmbeddiumBlockAndTintGetter, FabricBlockView,
 
         this.blockEntityArrays[sectionIndex] = section.getBlockEntityMap();
         this.blockEntityRenderDataArrays[sectionIndex] = section.getBlockEntityRenderDataMap();
-
-        //TODO: [VEN] Might break god knows what
-//        this.modelDataArrays[sectionIndex] = section.getModelDataMap();
-//        if(this.modelDataArrays[sectionIndex] != null) {
-//            this.hasModelData = true;
-//        }
-
-        //TODO: [VEN] Might break lighting
-//        this.auxLightArrays[sectionIndex] = section.getAuxLightManager();
     }
 
     private void unpackBlockData(BlockState[] blockArray, ChunkRenderContext context, ClonedChunkSection section) {
@@ -270,8 +242,6 @@ public class WorldSlice implements EmbeddiumBlockAndTintGetter, FabricBlockView,
             Arrays.fill(this.lightArrays[sectionIndex], null);
 
             this.blockEntityArrays[sectionIndex] = null;
-            //TODO: [VEN] Might break god knows what
-//            this.modelDataArrays[sectionIndex] = null;
         }
     }
 
@@ -397,42 +367,6 @@ public class WorldSlice implements EmbeddiumBlockAndTintGetter, FabricBlockView,
     public int getMinBuildHeight() {
         return this.world.getMinBuildHeight();
     }
-
-    //TODO: [VEN] Might break god knows what
-//    @Override
-//    public ModelData getModelData(BlockPos pos) {
-//        // Short-circuit immediately if we don't have model data arrays for any section. This method is called
-//        // for every single block being rendered, so it's worth making it as fast as possible to minimize
-//        // the speed penalty compared to vanilla.
-//        if (!this.hasModelData) {
-//            return ModelData.EMPTY;
-//        }
-//
-//        int relX = pos.getX() - this.originX;
-//        int relY = pos.getY() - this.originY;
-//        int relZ = pos.getZ() - this.originZ;
-//
-//        if (!isInside(relX, relY, relZ)) {
-//            return ModelData.EMPTY;
-//        }
-//
-//        var modelData = this.modelDataArrays[getLocalSectionIndex(relX >> 4, relY >> 4, relZ >> 4)];
-//
-//        if (modelData == null) {
-//            return ModelData.EMPTY;
-//        }
-//
-//        return modelData.get(pos.asLong());
-//    }
-
-    //TODO: [VEN] Might break lighting
-//    @Override
-//    public @Nullable AuxiliaryLightManager getAuxLightManager(ChunkPos pos) {
-//        if (pos.x < (this.volume.minX() >> 4) || pos.x > (this.volume.maxX() >> 4) || pos.z < (this.volume.minZ() >> 4) || pos.z > (this.volume.maxZ() >> 4)) {
-//            return null;
-//        }
-//        return this.auxLightArrays[getLocalSectionIndex(pos.x - (this.originX >> 4), 0, pos.z - (this.originZ >> 4))];
-//    }
 
     @Override
     public @Nullable ModelDataManager getModelDataManager() {

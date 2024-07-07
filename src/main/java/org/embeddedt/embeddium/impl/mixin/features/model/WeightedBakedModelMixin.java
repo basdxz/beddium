@@ -32,7 +32,7 @@ public class WeightedBakedModelMixin implements UnwrappableBakedModel {
      * @author JellySquid
      * @reason Avoid excessive object allocations
      */
-    @Overwrite(remap = false) //TODO: [VEN] Ensure if this needs a remap
+    @Overwrite(remap = false)
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction face, RandomSource random, ModelData modelData, RenderType renderLayer) {
         WeightedEntry.Wrapper<BakedModel> quad = getAt(this.list, Math.abs((int) random.nextLong()) % this.totalWeight);
 
@@ -48,7 +48,7 @@ public class WeightedBakedModelMixin implements UnwrappableBakedModel {
      * @author embeddedt
      * @reason Avoid excessive object allocations
      */
-    @Overwrite(remap = false) //TODO: [VEN] Ensure if this needs a remap
+    @Overwrite(remap = false)
     public ChunkRenderTypeSet getRenderTypes(@NotNull BlockState state, @NotNull RandomSource rand, @NotNull ModelData data) {
         WeightedEntry.Wrapper<BakedModel> quad = getAt(this.list, Math.abs((int) rand.nextLong()) % this.totalWeight);
 
