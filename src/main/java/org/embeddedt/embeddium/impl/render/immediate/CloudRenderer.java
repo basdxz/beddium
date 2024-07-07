@@ -3,12 +3,7 @@ package org.embeddedt.embeddium.impl.render.immediate;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.shaders.FogShape;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexBuffer;
-import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.vertex.*;
 import org.embeddedt.embeddium.api.util.ColorABGR;
 import org.embeddedt.embeddium.api.util.ColorARGB;
 import org.embeddedt.embeddium.api.util.ColorMixer;
@@ -31,6 +26,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.level.material.FogType;
 import net.minecraft.world.phys.Vec3;
+import org.embeddedt.embeddium.api.render.clouds.ModifyCloudRenderingEvent;
 import org.embeddedt.embeddium.impl.render.ShaderModBridge;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
@@ -85,9 +81,16 @@ public class CloudRenderer {
     private float cloudSizeX, cloudSizeZ, fogDistanceMultiplier;
     private int cloudDistanceMinimum, cloudDistanceMaximum;
     private CloudStatus cloudRenderMode;
+    private boolean hasCloudGeometry;
 
     public CloudRenderer(ResourceProvider factory) {
         this.reloadTextures(factory);
+    }
+
+    private static int fireModifyCloudRenderDistanceEvent(int distance) {
+        var event = new ModifyCloudRenderingEvent(distance);
+        ModifyCloudRenderingEvent.BUS.post(event);
+        return event.getCloudRenderDistance();
     }
 
     public void render(@Nullable ClientLevel world, LocalPlayer player, PoseStack stack, Matrix4f modelViewMatrix, Matrix4f projectionMatrix, float ticks, float tickDelta, double cameraX, double cameraY, double cameraZ) {
@@ -108,7 +111,7 @@ public class CloudRenderer {
         double cloudCenterX = (cameraX + cloudTime);
         double cloudCenterZ = (cameraZ) + 3.96D;
 
-        int renderDistance = Minecraft.getInstance().options.getEffectiveRenderDistance();
+        int renderDistance = fireModifyCloudRenderDistanceEvent(Minecraft.getInstance().options.getEffectiveRenderDistance());
         int cloudDistance = Math.max(this.cloudDistanceMinimum, (renderDistance * this.cloudDistanceMaximum) + 9);
 
         int centerCellX = (int) (Math.floor(cloudCenterX / this.cloudSizeX));
@@ -126,13 +129,26 @@ public class CloudRenderer {
             }
 
             this.vertexBuffer.bind();
-            this.vertexBuffer.upload(bufferBuilder.buildOrThrow());
+
+            MeshData meshData = bufferBuilder.build();
+
+            if(meshData != null) {
+                this.vertexBuffer.upload(meshData);
+                this.hasCloudGeometry = true;
+            } else {
+                this.hasCloudGeometry = false;
+            }
 
             VertexBuffer.unbind();
 
             this.prevCenterCellX = centerCellX;
             this.prevCenterCellY = centerCellZ;
             this.cachedRenderDistance = renderDistance;
+        }
+
+        // Skip render path if there is no cloud geometry
+        if (!this.hasCloudGeometry) {
+            return;
         }
 
         float previousEnd = RenderSystem.getShaderFogEnd();
