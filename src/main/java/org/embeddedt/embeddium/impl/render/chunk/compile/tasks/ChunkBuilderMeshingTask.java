@@ -1,6 +1,7 @@
 package org.embeddedt.embeddium.impl.render.chunk.compile.tasks;
 
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
+import org.embeddedt.embeddium.impl.model.ModelDataSnapshotter;
 import org.embeddedt.embeddium.impl.render.chunk.RenderSection;
 import org.embeddedt.embeddium.impl.render.chunk.compile.ChunkBufferSorter;
 import org.embeddedt.embeddium.impl.render.chunk.compile.ChunkBuildBuffers;
@@ -55,12 +56,16 @@ public class ChunkBuilderMeshingTask extends ChunkBuilderTask<ChunkBuildOutput> 
 
     private final int buildTime;
 
+    private final Map<BlockPos, ModelData> modelDataMap;
+
     private Vec3 camera = Vec3.ZERO;
 
     public ChunkBuilderMeshingTask(RenderSection render, ChunkRenderContext renderContext, int time) {
         this.render = render;
         this.renderContext = renderContext;
         this.buildTime = time;
+
+        this.modelDataMap = ModelDataSnapshotter.getModelDataForSection(Minecraft.getInstance().level, this.renderContext.getOrigin());
     }
 
     public ChunkBuilderMeshingTask withCameraPosition(Vec3 camera) {
@@ -105,7 +110,6 @@ public class ChunkBuilderMeshingTask extends ChunkBuilderTask<ChunkBuildOutput> 
                     for (int x = minX; x < maxX; x++) {
                         BlockState blockState = slice.getBlockState(x, y, z);
 
-                        //TODO: [VEN] Forge needs an .isEmpty() fr!
                         if (blockState.isAir() && !blockState.hasBlockEntity()) {
                             continue;
                         }
@@ -116,9 +120,7 @@ public class ChunkBuilderMeshingTask extends ChunkBuilderTask<ChunkBuildOutput> 
                         if (blockState.getRenderShape() == RenderShape.MODEL) {
                             BakedModel model = cache.getBlockModels()
                                 .getBlockModel(blockState);
-                            //TODO: [VEN] Might break god knows what
-//                            ModelData modelData = model.getModelData(context.localSlice(), blockPos, blockState, slice.getModelData(blockPos));
-                            ModelData modelData = model.getModelData(context.localSlice(), blockPos, blockState, ModelData.EMPTY);
+                            ModelData modelData = model.getModelData(context.localSlice(), blockPos, blockState, modelDataMap.getOrDefault(blockPos, ModelData.EMPTY));
 
                             long seed = blockState.getSeed(blockPos);
                             random.setSeed(seed);
