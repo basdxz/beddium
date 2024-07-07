@@ -135,14 +135,6 @@ public class FluidRenderer {
         var context = Objects.requireNonNull(GlobalChunkBuildContext.get());
         context.setCaptureAdditionalSprites(true);
 
-        // TODO: [VEN] Water might not feel so good
-//        boolean skipDefaultRendering;
-        boolean skipDefaultRendering = false;
-        try(var consumer = meshBuilder.asVertexConsumer(material)) {
-            // TODO: [VEN] Water might not feel so good
-//            skipDefaultRendering = IClientFluidTypeExtensions.of(fluidState).renderFluid(fluidState, world, blockPos, consumer, world.getBlockState(blockPos));
-        }
-
         for(TextureAtlasSprite sprite : context.getAdditionalCapturedSprites()) {
             if (sprite != null) {
                 meshBuilder.addSprite(sprite);
@@ -150,10 +142,6 @@ public class FluidRenderer {
         }
 
         context.setCaptureAdditionalSprites(false);
-
-        if(skipDefaultRendering) {
-            return;
-        }
 
         int posX = blockPos.getX();
         int posY = blockPos.getY();
