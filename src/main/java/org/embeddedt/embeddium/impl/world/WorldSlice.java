@@ -2,6 +2,7 @@ package org.embeddedt.embeddium.impl.world;
 
 import it.unimi.dsi.fastutil.ints.Int2ReferenceMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectFunction;
+import net.minecraftforge.client.model.data.ModelDataManager;
 import org.embeddedt.embeddium.api.render.chunk.EmbeddiumBlockAndTintGetter;
 import org.embeddedt.embeddium.impl.world.biome.*;
 import org.embeddedt.embeddium.impl.world.cloned.ChunkRenderContext;
@@ -432,6 +433,11 @@ public class WorldSlice implements EmbeddiumBlockAndTintGetter, FabricBlockView,
 //        }
 //        return this.auxLightArrays[getLocalSectionIndex(pos.x - (this.originX >> 4), 0, pos.z - (this.originZ >> 4))];
 //    }
+
+    @Override
+    public @Nullable ModelDataManager getModelDataManager() {
+        return this.world.getModelDataManager();
+    }
 
     @Override
     public Holder<Biome> getBiomeFabric(BlockPos pos) {
