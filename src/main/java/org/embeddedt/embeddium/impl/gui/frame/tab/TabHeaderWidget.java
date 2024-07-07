@@ -20,6 +20,8 @@ import net.minecraftforge.resource.ResourcePackLoader;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
@@ -41,27 +43,24 @@ public class TabHeaderWidget extends FlatButtonWidget {
 
     public TabHeaderWidget(Dim2i dim, String modId) {
         super(dim, getLabel(modId), () -> {});
-        Optional<String> logoFile = erroredLogos.contains(modId) ? Optional.empty() : ModList.get().getModContainerById(modId).flatMap(c -> c.getModInfo().getLogoFile());
+        Optional<Path> logoFile = erroredLogos.contains(modId) ? Optional.empty() : ModList.get().getModContainerById(modId).flatMap(c -> c.getModInfo().getLogoFile()).map(f -> ModList.get().getModFileById(modId).getFile().findResource(f));
         ResourceLocation texture = null;
-        //TODO: [VEN] Logo borked
-//        if(logoFile.isPresent()) {
-//            final Pack.ResourcesSupplier supplier = ResourcePackLoader.getPackFor(modId).orElse(ResourcePackLoader.getPackFor("neoforge").orElseThrow(()->new RuntimeException("Can't find neoforge, WHAT!")));
-//            try(PackResources pack = supplier.openPrimary(new PackLocationInfo("mod:" + modId, Component.empty(), PackSource.BUILT_IN, Optional.empty()))) {
-//                IoSupplier<InputStream> logoResource = pack.getRootResource(logoFile.get());
-//                if (logoResource != null) {
-//                    NativeImage logo = NativeImage.read(logoResource.get());
-//                    if(logo.getWidth() != logo.getHeight()) {
-//                        logo.close();
-//                        throw new IOException("Logo " + logoFile.get() + " for " + modId + " is not square");
-//                    }
-//                    texture = ResourceLocation.fromNamespaceAndPath(Embeddium.MODID, "logo/" + modId);
-//                    Minecraft.getInstance().getTextureManager().register(texture, new DynamicTexture(logo));
-//                }
-//            } catch(IOException e) {
-//                erroredLogos.add(modId);
-//                Embeddium.logger().error("Exception reading logo for " + modId, e);
-//            }
-//        }
+        if(logoFile.isPresent()) {
+            try {
+                if (Files.exists(logoFile.get())) {
+                    NativeImage logo = NativeImage.read(Files.newInputStream(logoFile.get()));
+                    if(logo.getWidth() != logo.getHeight()) {
+                        logo.close();
+                        throw new IOException("Logo " + logoFile.get() + " for " + modId + " is not square");
+                    }
+                    texture = ResourceLocation.fromNamespaceAndPath(Embeddium.MODID, "logo/" + modId);
+                    Minecraft.getInstance().getTextureManager().register(texture, new DynamicTexture(logo));
+                }
+            } catch(IOException e) {
+                erroredLogos.add(modId);
+                Embeddium.logger().error("Exception reading logo for " + modId, e);
+            }
+        }
         this.logoTexture = texture;
     }
 
