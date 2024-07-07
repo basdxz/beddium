@@ -57,13 +57,6 @@ sourceSets {
 repositories {
     maven("https://maven.minecraftforge.net/")
     maven("https://maven.fabricmc.net")
-    maven("https://maven.tterrag.com/")
-    maven("https://maven.blamejared.com")
-    maven("https://api.modrinth.com/maven") {
-        content {
-            includeGroup("maven.modrinth")
-        }
-    }
     maven("https://cursemaven.com") {
         content {
             includeGroup("curse.maven")
