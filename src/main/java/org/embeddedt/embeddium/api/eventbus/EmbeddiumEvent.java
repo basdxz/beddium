@@ -9,7 +9,6 @@ import net.minecraftforge.eventbus.api.Event;
  * <p></p>
  * On Fabric, it extends nothing.
  */
-//TODO: [VEN] Is this correct API-Wise?
 public abstract class EmbeddiumEvent extends Event {
     /**
      * Subclasses must override and return true if they want the event to be canceled.

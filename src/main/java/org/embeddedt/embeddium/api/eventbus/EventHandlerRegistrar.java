@@ -42,7 +42,6 @@ public class EventHandlerRegistrar<T extends EmbeddiumEvent> {
     }
 
     private static <T extends EmbeddiumEvent> boolean postPlatformSpecificEvent(T event) {
-        //TODO: [VEN] Is this correct API-Wise?
         return MinecraftForge.EVENT_BUS.post(event);
     }
 

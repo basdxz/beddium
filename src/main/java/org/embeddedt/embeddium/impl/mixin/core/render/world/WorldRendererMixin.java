@@ -109,7 +109,7 @@ public abstract class WorldRendererMixin implements WorldRendererExtended {
      * @reason Redirect to our renderer
      * @author embeddedt
      */
-    //TODO: [VEN] Validate importance
+    //TODO: [VEN] Re-add if Forge adds this
 //    @Overwrite
 //    public void iterateVisibleBlockEntities(Consumer<BlockEntity> blockEntityConsumer) {
 //        this.renderer.forEachVisibleBlockEntity(blockEntityConsumer);

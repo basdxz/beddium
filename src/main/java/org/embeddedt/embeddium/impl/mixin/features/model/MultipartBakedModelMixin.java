@@ -182,7 +182,7 @@ public class MultipartBakedModelMixin {
      * @author embeddedt
      * @reason use our selector system, avoid creating multipart model data if no submodels use it
      */
-    //TODO: [VEN] Is this important?
+    //TODO: [VEN] Re-add if Forge adds this
 //    @Overwrite(remap = false)
 //    public ModelData getModelData(BlockAndTintGetter world, BlockPos pos, BlockState state, ModelData tileModelData) {
 //        BakedModel[] models = getModelComponents(state);
