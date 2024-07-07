@@ -1,5 +1,8 @@
 package org.embeddedt.embeddium.impl.render.chunk.light;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import org.embeddedt.embeddium.impl.model.light.LightPipeline;
 import org.embeddedt.embeddium.impl.model.light.data.LightDataAccess;
 import org.embeddedt.embeddium.impl.model.light.data.QuadLightData;
@@ -14,6 +17,8 @@ import net.minecraftforge.client.model.lighting.FlatQuadLighter;
 import net.minecraftforge.client.model.lighting.QuadLighter;
 import net.minecraftforge.client.model.lighting.SmoothQuadLighter;
 import net.minecraftforge.client.textures.UnitTextureAtlasSprite;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
 
 /**
  * Implements an Embeddium-compatible frontend for the Forge light pipeline.
@@ -21,8 +26,10 @@ import net.minecraftforge.client.textures.UnitTextureAtlasSprite;
 public class ForgeLightPipeline implements LightPipeline {
     private final QuadLighter forgeLighter;
     private final BlockAndTintGetter level;
+    private final LightDataConsumer consumer = new LightDataConsumer();
     private final int[] mutableQuadVertexData = new int[32];
     private final BakedQuad mutableQuad = new BakedQuad(mutableQuadVertexData, -1, Direction.UP, UnitTextureAtlasSprite.INSTANCE, false);
+    private static final PoseStack.Pose EMPTY = new PoseStack.Pose(new Matrix4f(), new Matrix3f());
 
     private long cachedPos = Long.MIN_VALUE;
 
@@ -62,21 +69,61 @@ public class ForgeLightPipeline implements LightPipeline {
 
     @Override
     public void calculate(ModelQuadView quad, BlockPos pos, QuadLightData out, Direction cullFace, Direction lightFace, boolean shade) {
-        //TODO: [VEN] re-introduce quad lighting
-//        this.computeLightData(pos);
-//        BakedQuad forgeQuad;
-//        if(quad instanceof BakedQuad) {
-//            forgeQuad = (BakedQuad)quad;
-//        } else {
-//            forgeQuad = generateForgeQuad(quad);
-//        }
-//        forgeLighter.computeLightingForQuad(forgeQuad);
-//        System.arraycopy(forgeLighter.getComputedLightmap(), 0, out.lm, 0, 4);
-//        System.arraycopy(forgeLighter.getComputedBrightness(), 0, out.br, 0, 4);
+        this.computeLightData(pos);
+        BakedQuad forgeQuad;
+        if(quad instanceof BakedQuad) {
+            forgeQuad = (BakedQuad)quad;
+        } else {
+            forgeQuad = generateForgeQuad(quad);
+        }
+        forgeLighter.process(consumer, EMPTY, forgeQuad, OverlayTexture.NO_OVERLAY);
+        System.arraycopy(consumer.lm, 0, out.lm, 0, 4);
+        System.arraycopy(consumer.brightness, 0, out.br, 0, 4);
     }
 
     @Override
     public void reset() {
         this.cachedPos = Long.MIN_VALUE;
+    }
+
+    static class LightDataConsumer implements VertexConsumer {
+        float[] brightness;
+        int[] lm;
+
+        @Override
+        public void putBulkData( PoseStack.Pose pose, BakedQuad quad, float[] brightness, float r, float g, float b, float a, int[] lm, int overlay, boolean colorize) {
+            this.brightness = brightness;
+            this.lm = lm;
+        }
+
+        @Override
+        public VertexConsumer addVertex(float pX, float pY, float pZ) {
+            return null;
+        }
+
+        @Override
+        public VertexConsumer setColor(int pRed, int pGreen, int pBlue, int pAlpha) {
+            return null;
+        }
+
+        @Override
+        public VertexConsumer setUv(float pU, float pV) {
+            return null;
+        }
+
+        @Override
+        public VertexConsumer setUv1(int pU, int pV) {
+            return null;
+        }
+
+        @Override
+        public VertexConsumer setUv2(int pU, int pV) {
+            return null;
+        }
+
+        @Override
+        public VertexConsumer setNormal(float pNormalX, float pNormalY, float pNormalZ) {
+            return null;
+        }
     }
 }
