@@ -4,7 +4,6 @@ plugins {
     id("idea")
     id("net.minecraftforge.gradle") version("[6.0.24,6.2)")
     id("maven-publish")
-    id("org.spongepowered.mixin") version("0.7.38")
 
     // This dependency is only used to determine the state of the Git working tree so that build artifacts can be
     // more easily identified. TODO: Lazily load GrGit via a service only when builds are performed.
@@ -74,6 +73,7 @@ minecraft {
         mappings("official", "minecraft_version"())
     }
     copyIdeResources = true
+    reobf = false
     accessTransformer(file("src/main/resources/META-INF/accesstransformer.cfg"))
     runs {
         configureEach {
@@ -116,12 +116,6 @@ repositories {
     }
 }
 
-mixin {
-    // MixinGradle Settings
-    add(sourceSets["main"], "embeddium-refmap.json")
-    config("embeddium.mixins.json")
-}
-
 fun DependencyHandlerScope.compatCompileOnly(dependency: Dependency) {
     "compatCompileOnly"(dependency)
 }
@@ -137,10 +131,7 @@ dependencies {
     compileOnly("net.fabricmc.fabric-api:fabric-api:${"fabric_version"()}")
     compileOnly("net.fabricmc:fabric-loader:${"fabric_loader_version"()}")
 
-    annotationProcessor("net.fabricmc:sponge-mixin:0.12.5+mixin.0.8.5")
-
     compileOnly("io.github.llamalad7:mixinextras-common:0.3.5")
-    annotationProcessor("io.github.llamalad7:mixinextras-common:0.3.5")
     implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.3.5")) {
         jarJar.ranged(this, "[0.3.5,)")
     }
@@ -181,6 +172,10 @@ java {
 
 tasks.named<Jar>("jar").configure {
     archiveClassifier = "slim"
+
+    manifest {
+        attributes["MixinConfigs"] = "embeddium.mixins.json"
+    }
 }
 
 tasks.jarJar {
@@ -191,9 +186,11 @@ tasks.jarJar {
         from(sourceSets[it].output.resourcesDir)
     }
 
-    finalizedBy("reobfJarJar")
-
     archiveClassifier = ""
+}
+
+tasks.named("build").configure {
+    dependsOn("jarJar")
 }
 
 tasks.named<Jar>("sourcesJar").configure {
