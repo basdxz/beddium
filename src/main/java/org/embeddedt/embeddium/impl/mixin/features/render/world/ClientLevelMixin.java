@@ -37,7 +37,6 @@ public abstract class ClientLevelMixin extends Level {
         super(p_270739_, p_270683_, p_270200_, p_270240_, p_270692_, p_270904_, p_270470_, p_270248_, p_270466_);
     }
 
-    //TODO: [VEN] IGNORE WARNING, FOR NOW!!
     @Shadow
     private void lambda$doAnimateTick$8(BlockPos.MutableBlockPos pos, AmbientParticleSettings settings) {
         throw new AssertionError();
