@@ -1,6 +1,10 @@
 <img src="src/main/resources/icon.png" width="128">
 
-# Embeddium
+# Beddium
+
+This is an unofficial fork of Embeddium supporting the Forge Mod Loader for Minecraft versions 1.21+
+
+Project is WiP, remaining readme is unchanged from the original which can be found here: https://github.com/embeddedt/embeddium
 
 [![Modrinth Downloads](https://img.shields.io/modrinth/dt/sk9rgfiA?label=Modrinth&labelColor=%232D2D2D)](https://modrinth.com/mod/embeddium)
 [![Modrinth Version](https://img.shields.io/modrinth/v/sk9rgfiA?label=Latest%20version&labelColor=%232D2D2D)](https://modrinth.com/mod/embeddium/versions)

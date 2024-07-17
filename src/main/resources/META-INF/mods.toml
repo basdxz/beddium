@@ -8,13 +8,13 @@ config="embeddium.mixins.json"
 [[mods]]
 modId="embeddium"
 version="${version}"
-displayName="Embeddium"
+displayName="Beddium"
 logoFile="icon.png"
 description='''
-Embeddium is a performance mod for Minecraft based on the last open-source version of Sodium
+(Un)Official fork of Embeddium for Forge
 '''
 credits="embeddedt, NanoLive, CaffeineMC"
-authors="embeddedt"
+authors="Ven"
 
 # Enforce new enough Oculus
 [[dependencies.embeddium]]
