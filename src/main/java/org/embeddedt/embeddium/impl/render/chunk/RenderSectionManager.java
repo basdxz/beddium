@@ -30,7 +30,7 @@ import org.embeddedt.embeddium.impl.render.chunk.terrain.DefaultTerrainRenderPas
 import org.embeddedt.embeddium.impl.render.chunk.terrain.TerrainRenderPass;
 import org.embeddedt.embeddium.impl.render.chunk.vertex.format.ChunkMeshFormats;
 import org.embeddedt.embeddium.impl.render.chunk.vertex.format.ChunkVertexType;
-import org.embeddedt.embeddium.impl.render.texture.SpriteUtil;
+import org.embeddedt.embeddium.api.render.texture.SpriteUtil;
 import org.embeddedt.embeddium.impl.render.viewport.CameraTransform;
 import org.embeddedt.embeddium.impl.render.viewport.Viewport;
 import org.embeddedt.embeddium.impl.util.MathUtil;
@@ -50,6 +50,7 @@ import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.ArrayUtils;
 import org.embeddedt.embeddium.api.ChunkMeshEvent;
+import org.embeddedt.embeddium.impl.render.ShaderModBridge;
 import org.embeddedt.embeddium.impl.render.chunk.sorting.TranslucentQuadAnalyzer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -235,7 +236,8 @@ public class RenderSectionManager {
     private float getSearchDistance() {
         float distance;
 
-        if (Embeddium.options().performance.useFogOcclusion) {
+        // TODO: does *every* shaderpack really disable fog?
+        if (Embeddium.options().performance.useFogOcclusion && !ShaderModBridge.areShadersEnabled()) {
             distance = this.getEffectiveRenderDistance();
         } else {
             distance = this.getRenderDistance();
