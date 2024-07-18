@@ -10,4 +10,4 @@ pluginManagement {
 
 val minecraft_version: String by settings
 
-rootProject.name = "embeddium-${minecraft_version}"
+rootProject.name = "beddium-${minecraft_version}"

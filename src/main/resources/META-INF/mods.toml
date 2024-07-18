@@ -6,7 +6,7 @@ license="LGPL-3.0-only"
 config="embeddium.mixins.json"
 
 [[mods]]
-modId="embeddium"
+modId="beddium"
 version="${version}"
 displayName="Beddium"
 logoFile="icon.png"
@@ -16,8 +16,24 @@ description='''
 credits="embeddedt, NanoLive, CaffeineMC"
 authors="Ven"
 
+[[mods]]
+modId = "rubidium"
+version = "0.7.1"
+displayName = "Rubidium (Beddium)"
+description = '''
+Stub, to allow mods detecting Rubidium to function as expected.
+'''
+
+[[mods]]
+modId = "embeddium"
+version = "1.0.5"
+displayName = "Embeddium (Beddium)"
+description = '''
+Stub, to allow mods detecting Embeddium to function as expected.
+'''
+
 # Enforce new enough Oculus
-[[dependencies.embeddium]]
+[[dependencies.beddium]]
 modId = "oculus"
 type = "optional"
 mandatory = false

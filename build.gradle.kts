@@ -234,15 +234,18 @@ publishing {
 
 publishMods {
     file = tasks.jarJar.get().archiveFile
-    changelog = "https://github.com/embeddedt/embeddium/wiki/Changelog"
+    changelog = "https://github.com/basdxz/beddium/releases"
     type = STABLE
     modLoaders.add("forge")
-    modLoaders.add("neoforge")
 
     curseforge {
         projectId = "908741"
         accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
         minecraftVersions.add("minecraft_version"())
+
+        incompatible {
+            slug = "embeddium"
+        }
 
         incompatible {
             slug = "rubidium"
@@ -258,6 +261,10 @@ publishMods {
         minecraftVersions.add("minecraft_version"())
 
         incompatible {
+            slug = "embeddium"
+        }
+
+        incompatible {
             slug = "rubidium"
         }
 
@@ -266,7 +273,7 @@ publishMods {
         }
     }
 
-    displayName = "[${"minecraft_version"()}] Embeddium ${"mod_version"()}"
+    displayName = "[${"minecraft_version"()}] Beddium ${"mod_version"()}"
 }
 
 fun getModVersion(): String {
