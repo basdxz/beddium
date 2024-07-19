@@ -1,9 +1,9 @@
 #version 330 core
 
-#import <embeddium:include/fog.glsl>
-#import <embeddium:include/chunk_vertex.glsl>
-#import <embeddium:include/chunk_matrices.glsl>
-#import <embeddium:include/chunk_material.glsl>
+#import <beddium:include/fog.glsl>
+#import <beddium:include/chunk_vertex.glsl>
+#import <beddium:include/chunk_matrices.glsl>
+#import <beddium:include/chunk_material.glsl>
 
 out vec4 v_Color;
 out vec2 v_TexCoord;

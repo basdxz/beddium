@@ -131,7 +131,7 @@ public class MixinPlugin implements IMixinConfigPlugin {
             return null;
         }
 
-        ModFileInfo modFileInfo = FMLLoader.getLoadingModList().getModFileById("embeddium");
+        ModFileInfo modFileInfo = FMLLoader.getLoadingModList().getModFileById("beddium");
 
         if (modFileInfo == null) {
             // Probably a load error

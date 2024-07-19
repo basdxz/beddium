@@ -1,6 +1,6 @@
 #version 330 core
 
-#import <embeddium:include/fog.glsl>
+#import <beddium:include/fog.glsl>
 
 in vec4 v_Color; // The interpolated vertex color
 in vec2 v_TexCoord; // The interpolated block texture coordinates
