@@ -5,9 +5,9 @@
 Beddium is a free and open-source performance mod for Minecraft clients. 
 
 ## NOTICE
-This project is an (Un)Official fork of [Embeddium](https://github.com/embeddedt/embeddium) with support for Forge on Minecraft versions 1.21+
+This project is an (Un)Official fork of [Embeddium](https://github.com/embeddedt/embeddium) with support for Minecraft Forge (not NeoForge) on Minecraft versions 1.21+
 
-Created with support from Embbeddedt, to allow upstream to focus on supporting the NeoForge and Fabric modloaders.
+Created with support from Embbeddedt, to allow upstream to focus on supporting the NeoForge modloaders.
 
 Please do not report issues with Beddium to the maintainers of Embeddium or Sodium.
 
@@ -28,7 +28,7 @@ Please do not report issues with Beddium to the maintainers of Embeddium or Sodi
 * Asek3, for the initial port to Forge
 * XFactHD, for providing a list of gamebreaking Rubidium issues to start this work off, and for testing early builds
 * Pepper, for their invaluable assistance with getting Forge lighting to work on Sodium 0.5
-* @CelestialAbyss and @input-Here for making the new logo design
+* @Houstonruss for the logo
 
 ## License
 
