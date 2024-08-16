@@ -41,7 +41,7 @@ public abstract class BufferBuilderMixin implements VertexBufferWriter {
 
     @Override
     public boolean canUseIntrinsics() {
-        return this.embeddiumFormat != null && this.embeddiumFormat.isSimpleFormat();
+        return this.embeddiumFormat != null && this.embeddiumFormat.isSimpleFormat() && this.buffer != null;
     }
 
     @Override

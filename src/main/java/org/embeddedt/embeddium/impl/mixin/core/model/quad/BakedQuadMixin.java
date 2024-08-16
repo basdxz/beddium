@@ -52,7 +52,7 @@ public class BakedQuadMixin implements BakedQuadView {
     @Unique
     private ModelQuadFacing normalFace;
 
-    @Inject(method = "<init>*", at = @At("RETURN"))
+    @Inject(method = "/<init>/", at = @At("RETURN"))
     private void init(CallbackInfo ci) {
         this.normal = ModelQuadUtil.calculateNormal(this);
         this.normalFace = ModelQuadUtil.findNormalFace(this.normal);
@@ -111,6 +111,11 @@ public class BakedQuadMixin implements BakedQuadView {
     }
 
     @Override
+    public void setFlags(int flags) {
+        this.flags = flags;
+    }
+
+    @Override
     public int getColorIndex() {
         return this.tintIndex;
     }
@@ -118,6 +123,11 @@ public class BakedQuadMixin implements BakedQuadView {
     @Override
     public ModelQuadFacing getNormalFace() {
         return this.normalFace;
+    }
+
+    @Override
+    public int getComputedFaceNormal() {
+        return this.normal;
     }
 
     @Override

@@ -3,6 +3,8 @@ package org.embeddedt.embeddium.impl.gui;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.platform.Window;
+import net.neoforged.fml.ModList;
+import net.neoforged.neoforge.common.NeoForgeConfig;
 import org.embeddedt.embeddium.api.options.structure.OptionFlag;
 import org.embeddedt.embeddium.api.options.structure.OptionGroup;
 import org.embeddedt.embeddium.api.options.structure.OptionImpact;
@@ -19,6 +21,7 @@ import org.embeddedt.embeddium.api.options.control.SliderControl;
 import org.embeddedt.embeddium.api.options.control.TickBoxControl;
 import org.embeddedt.embeddium.api.options.storage.MinecraftOptionsStorage;
 import org.embeddedt.embeddium.api.options.structure.OptionStorage;
+import org.embeddedt.embeddium.impl.gui.options.FullscreenResolutionHelper;
 import org.embeddedt.embeddium.impl.gui.options.storage.EmbeddiumOptionsStorage;
 import org.embeddedt.embeddium.impl.render.chunk.compile.executor.ChunkBuilder;
 import net.minecraft.client.*;
@@ -107,6 +110,7 @@ public class EmbeddiumGameOptionPages {
                             }
                         }, (opts) -> opts.fullscreen().get())
                         .build())
+                .addConditionally(!FullscreenResolutionHelper.isFullscreenResAlreadyAdded(), FullscreenResolutionHelper::createFullScreenResolutionOption)
                 .add(OptionImpl.createBuilder(boolean.class, vanillaOpts)
                         .setId(StandardOptions.Option.VSYNC)
                         .setName(Component.translatable("options.vsync"))
@@ -286,6 +290,18 @@ public class EmbeddiumGameOptionPages {
                         .setImpact(OptionImpact.VARIES)
                         .setBinding((opts, value) -> opts.performance.useTranslucentFaceSorting = value, opts -> opts.performance.useTranslucentFaceSorting)
                         .setEnabled(!ShaderModBridge.isNvidiumEnabled())
+                        .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
+                        .build())
+                .build());
+
+        groups.add(OptionGroup.createBuilder()
+                .setId(StandardOptions.Group.LIGHTING)
+                .add(OptionImpl.createBuilder(boolean.class, sodiumOpts)
+                        .setId(StandardOptions.Option.USE_QUAD_NORMALS_FOR_LIGHTING)
+                        .setControl(TickBoxControl::new)
+                        .setImpact(OptionImpact.LOW)
+                        .setBinding((opts, value) -> opts.quality.useQuadNormalsForShading = value, opts -> opts.quality.useQuadNormalsForShading)
+                        .setEnabled(!NeoForgeConfig.CLIENT.experimentalForgeLightPipelineEnabled.get())
                         .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
                         .build())
                 .build());

@@ -166,7 +166,9 @@ public class FluidRenderer {
             return;
         }
 
-        boolean isWater = fluidState.is(FluidTags.WATER);
+        // LVT name kept for 1.20.1 in case a mixin captures it, the meaning of this variable is now "does the fluid
+        // support AO"
+        boolean isWater = fluid.getFluidType().getLightLevel(fluidState, world, blockPos) == 0;
 
         final ColorProvider<FluidState> colorProvider = this.getColorProvider(fluid);
 
@@ -205,7 +207,7 @@ public class FluidRenderer {
         LightMode lightMode = isWater && Minecraft.useAmbientOcclusion() ? LightMode.SMOOTH : LightMode.FLAT;
         LightPipeline lighter = this.lighters.getLighter(lightMode);
 
-        quad.setFlags(0);
+        quad.setFlags(ModelQuadFlags.IS_VANILLA_SHADED);
 
         if (!sfUp && this.isSideExposed(world, posX, posY, posZ, Direction.UP, Math.min(Math.min(northWestHeight, southWestHeight), Math.min(southEastHeight, northEastHeight)))) {
             northWestHeight -= EPSILON;
@@ -316,7 +318,7 @@ public class FluidRenderer {
 
         }
 
-        quad.setFlags(ModelQuadFlags.IS_PARALLEL | ModelQuadFlags.IS_ALIGNED);
+        quad.setFlags(ModelQuadFlags.IS_VANILLA_SHADED | ModelQuadFlags.IS_PARALLEL | ModelQuadFlags.IS_ALIGNED);
 
         for (Direction dir : DirectionUtil.HORIZONTAL_DIRECTIONS) {
             float c1;
