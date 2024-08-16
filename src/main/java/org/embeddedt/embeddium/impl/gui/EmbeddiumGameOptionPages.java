@@ -3,8 +3,7 @@ package org.embeddedt.embeddium.impl.gui;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.platform.Window;
-import net.neoforged.fml.ModList;
-import net.neoforged.neoforge.common.NeoForgeConfig;
+import net.minecraftforge.common.ForgeConfig;
 import org.embeddedt.embeddium.api.options.structure.OptionFlag;
 import org.embeddedt.embeddium.api.options.structure.OptionGroup;
 import org.embeddedt.embeddium.api.options.structure.OptionImpact;
@@ -301,7 +300,7 @@ public class EmbeddiumGameOptionPages {
                         .setControl(TickBoxControl::new)
                         .setImpact(OptionImpact.LOW)
                         .setBinding((opts, value) -> opts.quality.useQuadNormalsForShading = value, opts -> opts.quality.useQuadNormalsForShading)
-                        .setEnabled(!NeoForgeConfig.CLIENT.experimentalForgeLightPipelineEnabled.get())
+                        .setEnabled(!ForgeConfig.CLIENT.experimentalForgeLightPipelineEnabled.get())
                         .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
                         .build())
                 .build());

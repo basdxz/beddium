@@ -3,7 +3,7 @@ package org.embeddedt.embeddium.impl.model.color;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceMap;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ReferenceSet;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import org.embeddedt.embeddium.impl.model.color.interop.BlockColorsExtended;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.renderer.BiomeColors;

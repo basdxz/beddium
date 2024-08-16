@@ -4,7 +4,7 @@ import com.mojang.blaze3d.platform.Monitor;
 import com.mojang.blaze3d.platform.Window;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import net.neoforged.fml.ModList;
+import net.minecraftforge.fml.ModList;
 import org.embeddedt.embeddium.api.options.control.ControlValueFormatter;
 import org.embeddedt.embeddium.api.options.control.SliderControl;
 import org.embeddedt.embeddium.api.options.storage.MinecraftOptionsStorage;

@@ -1,6 +1,5 @@
 package org.embeddedt.embeddium.impl.mixin;
 
-import net.neoforged.fml.ModLoadingIssue;
 import org.embeddedt.embeddium.impl.EmbeddiumPreLaunch;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLLoader;
@@ -74,7 +73,9 @@ public class MixinPlugin implements IMixinConfigPlugin {
         try {
             // https://github.com/dima-dencep/NanoLiveConfig/commit/841e17eacca2d3a1e12b025fc490f392d202ea73
             if(MixinService.getService().getBytecodeProvider().getClassNode("net.caffeinemc.caffeineconfig.AdvancedEmbeddiumHackery") != null) {
-                FMLLoader.getLoadingModList().getModLoadingIssues().add(ModLoadingIssue.error("Rubidium/Embeddium Extra by dima_dencep hacks Embeddium to prevent accurate detection of mods causing game issues, it is not supported"));
+                // TODO: [VEN] Find where to append mod loading issues
+
+//                FMLLoader.getLoadingModList().getModLoadingIssues().add(ModLoadingIssue.error("Rubidium/Embeddium Extra by dima_dencep hacks Embeddium to prevent accurate detection of mods causing game issues, it is not supported"));
             }
         } catch (ClassNotFoundException | IOException ignored) {
             // no problem
